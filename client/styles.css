@@ -1,5 +1,12 @@
 /* your beautiful css styling goes here! */
-
+body{
+}
+.board{
+  width: 1000px;
+  height: 1000px;
+  margin: auto;
+  border: 4px solid blue;
+}
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
