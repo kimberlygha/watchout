@@ -2,6 +2,7 @@ var curScore = 0;
 var highScore = 0;
 var collisions = 0
 var hero; 
+var snitch;
 
 var svg = d3.select('.board').append('svg').attr('height', 1000).attr('width', 1000);
 
@@ -23,8 +24,6 @@ setInterval(function(){
     return Math.random()*1000;
   });
 }, 1500);
-
-
 
 // var drag = d3.behavior.drag().on('drag', function(){
 //   svg.select('rect').attr('x', Math.min(980, Math.max(d3.event.x, 0))).attr('y', Math.min(980, Math.max(d3.event.y, 0)));
@@ -53,29 +52,45 @@ var makeHero = function(){
 
 makeHero();
 
-var checkCollision = function(){
-  var radiusSum = 35;
-  var xDiff = parseInt(d3.select(this).attr('x')) - parseInt(svg.select('rect').attr('x'));
-  var yDiff = parseInt(d3.select(this).attr('y')) - parseInt(svg.select('rect').attr('y'));
+var makeSnitch = function(){
+  snitch = svg.append("svg:image").attr("xlink:href", "assets/snitch.png").attr('x', 0).attr('y', 0).attr('width', 20).attr('height', 20); 
+}
+
+makeSnitch();
+
+var checkCollision = function(n, cb){
+  var radiusSum = n;
+  var xDiff = parseInt(d3.select(this).attr('x')) - parseInt(hero.attr('x'));
+  var yDiff = parseInt(d3.select(this).attr('y')) - parseInt(hero.attr('y'));
   var distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
   if (distance < radiusSum) {
-    hero.transition().duration(500).attr('width',100).attr('height',100).transition().duration(500).attr('width',20).attr('height',20);
-    if (curScore > highScore) {
-      highScore = curScore;
-      d3.select(".highscore").text('High score: ' + highScore);
-    }
-    curScore = 0;
-    collisions++;
-    d3.select(".collisions").text('Collisions: ' + collisions);
+    cb();  
   }
 };
 
-var updateCurScore = function(){
-  curScore += 1;
-  d3.select(".current").text('Current Score: ' + curScore);
+var buldgerCB = function() {
+  hero.transition().duration(500).attr('width',100).attr('height',100).transition().duration(500).attr('width',20).attr('height',20);
+  if (curScore > highScore) {
+    highScore = curScore;
+    d3.select(".highscore").text('High score: ' + highScore);
+  }
+  curScore = 0;
+  collisions++;
+  d3.select(".collisions").text('Collisions: ' + collisions);
+};
+
+var snitchCB = function() {
+  updateCurScore(1000);
 }
 
-setInterval(updateCurScore, 100);
+var updateCurScore = function(n){
+  curScore += n;
+  d3.select(".current").text('Current Score: ' + curScore);
+};
+
+setInterval(function(){
+  updateCurScore(1);
+}, 100);
 
 // setInterval(function(){
 //   svg.selectAll('image').each(function(){
@@ -86,7 +101,9 @@ setInterval(updateCurScore, 100);
 // }, 1000)
 
 setInterval(function(){
-  svg.selectAll('svg').each(checkCollision);
+  svg.selectAll('svg').each(function(){
+    checkCollision(40, buldgerCB);
+  });
 }, 10);
 
 // d3.selectAll('image').each(function(){
