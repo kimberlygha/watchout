@@ -1,13 +1,14 @@
 var curScore = 0;
 var highScore = 0;
 var collisions = 0
+var hero; 
 
 var svg = d3.select('.board').append('svg').attr('height', 1000).attr('width', 1000);
 
 var makeEnemy = function(n){
   for (var i = 0; i < n; i++) {
     var defs = svg.append("svg").attr('x', Math.random()*1000).attr('y', Math.random()*1000).attr('height', 30).attr('width', 30);
-    defs.append("svg:image").attr("xlink:href", "assets/shuriken.png").attr('height', 30).attr('width', 30);
+    defs.append("svg:image").attr("xlink:href", "assets/buldger.png").attr('height', 30).attr('width', 30);
     // svg.append("svg:image").attr("xlink:href", "assets/shuriken.png").attr('height', 30).attr('width', 30)
     // .attr('x', Math.random()*1000).attr('y', Math.random()*1000).attr('transform','rotate(360)');
   }
@@ -29,24 +30,24 @@ setInterval(function(){
 //   svg.select('rect').attr('x', Math.min(980, Math.max(d3.event.x, 0))).attr('y', Math.min(980, Math.max(d3.event.y, 0)));
 // });
  d3.select('body').on('keydown', function(){
-  var x = d3.select('rect').attr('x');
-  var y = d3.select('rect').attr('y');
+  var x = hero.attr('x');
+  var y = hero.attr('y');
   if (event.keyCode === 65) {
-    d3.select('rect').attr('x', Math.max(x - 5, 0));
+    hero.attr('x', Math.max(x - 5, 0));
   }
   if(event.keyCode === 87 ){
-    d3.select('rect').attr('y', Math.max(y - 5, 0));
+    hero.attr('y', Math.max(y - 5, 0));
   }
   if(event.keyCode === 68){
-    d3.select('rect').attr('x', Math.min(parseInt(x) + 5, 980)); 
+    hero.attr('x', Math.min(parseInt(x) + 5, 950)); 
   }
   if(event.keyCode === 83){
-    d3.select('rect').attr('y', Math.min(parseInt(y) + 5, 980));
+    hero.attr('y', Math.min(parseInt(y) + 5, 950));
   }
 });
 
 var makeHero = function(){
-  svg.append("rect").attr('x', 500).attr('y', 500).attr('width', 20).attr('height', 20).style('fill', 'red');
+  hero = svg.append("svg:image").attr("xlink:href", "assets/harry.png").attr('x', 500).attr('y', 500).attr('width', 50).attr('height', 50);
   // .attr('draggable', 'true');
 };
 
@@ -58,7 +59,7 @@ var checkCollision = function(){
   var yDiff = parseInt(d3.select(this).attr('y')) - parseInt(svg.select('rect').attr('y'));
   var distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
   if (distance < radiusSum) {
-    d3.select('rect').transition().duration(500).attr('width',100).attr('height',100).transition().duration(500).attr('width',20).attr('height',20);
+    hero.transition().duration(500).attr('width',100).attr('height',100).transition().duration(500).attr('width',20).attr('height',20);
     if (curScore > highScore) {
       highScore = curScore;
       d3.select(".highscore").text('High score: ' + highScore);

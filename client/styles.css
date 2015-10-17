@@ -6,6 +6,8 @@ body{
   height: 1000px;
   margin: auto;
   border: 4px solid blue;
+  background-image: url("assets/field.gif");
+  background-size: cover;
 }
 
 /* Note: an asteroid image is included in this repo.
