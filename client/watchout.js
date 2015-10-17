@@ -2,28 +2,27 @@ var curScore = 0;
 var highScore = 0;
 var collisions = 0
 
-var svg = d3.select('.board').append('svg').attr('height', '1000px').attr('width', '1000px');
+var svg = d3.select('.board').append('svg').attr('height', 1000).attr('width', 1000);
 
 var makeEnemy = function(n){
   for (var i = 0; i < n; i++) {
-    svg.append("circle")
-    .attr('r', '15').attr('cx', Math.random()*1000).attr('cy', Math.random()*1000)
-    .style('fill', 'grey');
+    svg.append("svg:image").attr("xlink:href", "assets/shuriken.png").attr('height', 30).attr('width', 30)
+    .attr('x', Math.random()*1000).attr('y', Math.random()*1000);//.attr('transform','rotate(360)');
   }
 };
 
 makeEnemy(20);
 
 setInterval(function(){
-  svg.selectAll("circle").transition().duration(1500).attr('cx', function(){
+  svg.selectAll("image").transition().duration(1500).attr('transform','rotate(240)').attr('x', function(){
     return Math.random()*1000;
-  }).attr('cy', function(){
+  }).attr('y', function(){
     return Math.random()*1000;
   });
 }, 1500);
 
 var drag = d3.behavior.drag().on('drag', function(){
-  svg.select('rect').attr('x', Math.min(980, Math.max(d3.event.x, 0))+'px').attr('y', Math.min(980, Math.max(d3.event.y, 0))+'px');
+  svg.select('rect').attr('x', Math.min(980, Math.max(d3.event.x, 0))).attr('y', Math.min(980, Math.max(d3.event.y, 0)));
 });
 
 var makeHero = function(){
@@ -35,8 +34,8 @@ makeHero();
 
 var checkCollision = function(){
   var radiusSum = 35;
-  var xDiff = parseInt(d3.select(this).attr('cx')) - parseInt(svg.select('rect').attr('x'));
-  var yDiff = parseInt(d3.select(this).attr('cy')) - parseInt(svg.select('rect').attr('y'));
+  var xDiff = parseInt(d3.select(this).attr('x')) - parseInt(svg.select('rect').attr('x'));
+  var yDiff = parseInt(d3.select(this).attr('y')) - parseInt(svg.select('rect').attr('y'));
   var distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
   if (distance < radiusSum) {
     if (curScore > highScore) {
@@ -57,5 +56,9 @@ var updateCurScore = function(){
 setInterval(updateCurScore, 100);
 
 setInterval(function(){
-  svg.selectAll('circle').each(checkCollision);
+  svg.selectAll('image').each(checkCollision);
 }, 10);
+
+// d3.selectAll('image').each(function(){
+//   d3.select(this).transition().duration(100).attr("transform", "rotate(180)");
+// },100);
