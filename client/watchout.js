@@ -15,7 +15,7 @@ var makeEnemy = function(n){
   }
 };
 
-makeEnemy(20);
+makeEnemy(15);
 
 setInterval(function(){
   svg.selectAll("svg").transition().duration(1500).attr('x', function(){
@@ -32,16 +32,16 @@ setInterval(function(){
   var x = hero.attr('x');
   var y = hero.attr('y');
   if (event.keyCode === 65) {
-    hero.attr('x', Math.max(x - 5, 0));
+    hero.attr('x', Math.max(x - 15, 0));
   }
   if(event.keyCode === 87 ){
-    hero.attr('y', Math.max(y - 5, 0));
+    hero.attr('y', Math.max(y - 15, 0));
   }
   if(event.keyCode === 68){
-    hero.attr('x', Math.min(parseInt(x) + 5, 950)); 
+    hero.attr('x', Math.min(parseInt(x) + 15, 950)); 
   }
   if(event.keyCode === 83){
-    hero.attr('y', Math.min(parseInt(y) + 5, 950));
+    hero.attr('y', Math.min(parseInt(y) + 15, 950));
   }
 });
 
@@ -53,23 +53,26 @@ var makeHero = function(){
 makeHero();
 
 var makeSnitch = function(){
-  snitch = svg.append("svg:image").attr("xlink:href", "assets/snitch.png").attr('x', 0).attr('y', 0).attr('width', 20).attr('height', 20); 
+  snitch = svg.append("svg:image").attr("xlink:href", "assets/snitch.png").attr('x', 0).attr('y', 0).attr('width', 40).attr('height', 40); 
 }
 
 makeSnitch();
 
+setInterval(function(){
+  snitch.transition().duration(1000).attr('x', Math.random()*1000).attr('y', Math.random()*1000);
+}, 1000)
+
 var checkCollision = function(n, cb){
-  var radiusSum = n;
+  var radiusSum =n;
   var xDiff = parseInt(d3.select(this).attr('x')) - parseInt(hero.attr('x'));
   var yDiff = parseInt(d3.select(this).attr('y')) - parseInt(hero.attr('y'));
   var distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
   if (distance < radiusSum) {
-    cb();  
+    cb();
   }
 };
 
 var buldgerCB = function() {
-  hero.transition().duration(500).attr('width',100).attr('height',100).transition().duration(500).attr('width',20).attr('height',20);
   if (curScore > highScore) {
     highScore = curScore;
     d3.select(".highscore").text('High score: ' + highScore);
@@ -102,10 +105,12 @@ setInterval(function(){
 
 setInterval(function(){
   svg.selectAll('svg').each(function(){
-    checkCollision(40, buldgerCB);
+    checkCollision.call(this, 40, buldgerCB);
   });
-}, 10);
-
+  snitch.each(function(){
+    checkCollision.call(this, 45, snitchCB);
+  });
+}, 60);
 // d3.selectAll('image').each(function(){
 //   d3.select(this).transition().duration(100).attr("transform", "rotate(180)");
 // },100);
