@@ -73,6 +73,7 @@ var checkCollision = function(n, cb){
 };
 
 var buldgerCB = function() {
+  hero.transition().duration(50).attr('opacity', 0.3).transition().duration(50).attr('opacity', 1).transition().duration(50).attr('opacity', 0.3).transition().duration(50).attr('opacity', 1);
   if (curScore > highScore) {
     highScore = curScore;
     d3.select(".highscore").text('High score: ' + highScore);
