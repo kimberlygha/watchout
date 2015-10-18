@@ -16,6 +16,7 @@ var makeEnemy = function(n){
 };
 
 makeEnemy(15);
+  
 
 setInterval(function(){
   svg.selectAll("svg").transition().duration(1500).attr('x', function(){
@@ -62,15 +63,25 @@ setInterval(function(){
   snitch.transition().duration(1000).attr('x', Math.random()*1000).attr('y', Math.random()*1000);
 }, 1000)
 
+
 var checkCollision = function(n, cb){
   var radiusSum =n;
   var xDiff = parseInt(d3.select(this).attr('x')) - parseInt(hero.attr('x'));
   var yDiff = parseInt(d3.select(this).attr('y')) - parseInt(hero.attr('y'));
   var distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
   if (distance < radiusSum) {
-    cb();
+      cb();
   }
+
 };
+// function cycle() {
+//   d3.select(this).transition()
+//       .duration(10000)
+//       .attrTween("transform", function() { return d3.interpolateString("rotate(0)", "rotate(720)"); })
+//       .each("end", cycle);
+// }
+
+// svg.selectAll('image').each(cycle);
 
 var buldgerCB = function() {
   hero.transition().duration(50).attr('opacity', 0.3).transition().duration(50).attr('opacity', 1).transition().duration(50).attr('opacity', 0.3).transition().duration(50).attr('opacity', 1);
@@ -79,8 +90,8 @@ var buldgerCB = function() {
     d3.select(".highscore").text('High score: ' + highScore);
   }
   curScore = 0;
-  collisions++;
-  d3.select(".collisions").text('Collisions: ' + collisions);
+    collisions++;
+    d3.select(".collisions").text('Collisions: ' + collisions);
 };
 
 var snitchCB = function() {
